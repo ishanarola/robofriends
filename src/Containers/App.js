@@ -8,7 +8,7 @@ import { setSearchField, getRobots } from "../Redux/actions";
 // import { robots } from "./robots";
 const mapStateToProps = (state) => {
   return {
-    searchField: state.searchRobots.searchField,
+    searchField: state.setSearchField.searchField,
     robots: state.getRobots.robots,
     isPending: state.getRobots.isPending,
   };

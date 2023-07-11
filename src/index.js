@@ -1,19 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import {Provider} from 'react-redux';
-import store from './Redux/store';
-import './index.css';
-import App from './Containers/App';
-// import Hello from "./Hello";
-import reportWebVitals from './reportWebVitals';
-import 'tachyons';
-// import TicTacToe from './TicTacToe';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import store from "./Redux/store";
+import "./index.css";
+import App from "./Containers/App";
+import reportWebVitals from "./reportWebVitals";
+import "tachyons";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-    <App />
+      <App />
     </Provider>
   </React.StrictMode>
 );
