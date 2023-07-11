@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import CardList from "../Components/CardList";
 import SearchBox from "../Components/SearchBox";
 import Scroll from "../Components/Scroll";
 import ErrorBoundry from "../Components/ErrorBoundry";
-import { setSearchField, getRobots } from "../Redux/actions";
+import { useSelector, useDispatch } from "react-redux";
+import { setSearchField, fetchRobots } from "../Redux/robotSlice";
+// import { setSearchField, getRobots } from "../Redux/actions";
 // import { robots } from "./robots";
-const mapStateToProps = (state) => {
-  return {
-    searchField: state.setSearchField.searchField,
-    robots: state.getRobots.robots,
-    isPending: state.getRobots.isPending,
-  };
-};
+
+// const mapStateToProps = (state) => {
+//   return {
+//     searchField: state.setSearchField.searchField,
+//     robots: state.getRobots.robots,
+//     isPending: state.getRobots.isPending,
+//   };
+// };
 
 // const mapDispatchToProps = (dispatch) => {const mapDispatchToProps = (dispatch) => {
 //   return {
@@ -20,7 +23,16 @@ const mapStateToProps = (state) => {
 //     onRequestRobots: () => dispatch(requestRobots())
 //   }
 // }
-function App(props) {
+function App() {
+  const state = useSelector((state) => {
+    return {
+      searchField: state.robots.searchField,
+      loading: state.robots.loading,
+      robots: state.robots.robots,
+      error: state.robots.error,
+    };
+  });
+  const dispatch = useDispatch();
   // state = {
   //   robots: [],
   //   searchString: "",
@@ -29,7 +41,8 @@ function App(props) {
   // const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
-    props.dispatch(getRobots());
+    // props.dispatch(getRobots());
+    dispatch(fetchRobots());
     // async function fetchData() {
     //   try {
     //     const response = await fetch(
@@ -50,29 +63,34 @@ function App(props) {
 
   const onSearchChange = (e) => {
     // setSearchString( e.target.value );
-    props.dispatch(setSearchField(e.target.value));
+    dispatch(setSearchField(e.target.value));
   };
 
-  const { robots, searchField, isPending } = props;
+  const { robots, searchField, error, loading } = state;
   const filteredRobots = robots.filter((robot) =>
     robot.name.toLowerCase().includes(searchField.toLowerCase())
   );
-  return isPending ? (
-    <div className="wrapper">
-      <h1>Loading...</h1>
-    </div>
-  ) : (
-    <div className="tc">
-      <h1 className="f1">Robo Friends</h1>
-      <SearchBox searchChange={onSearchChange} />
-      {/* If anything happens in CardLiSt, ErrorBoundry will catch it and show error */}
-      <ErrorBoundry>
-        <Scroll>
-          <CardList robots={filteredRobots} />
-        </Scroll>
-      </ErrorBoundry>
-    </div>
+  return (
+    <>
+      {loading && (
+        <div className="wrapper">
+          <h1>Loading...</h1>
+        </div>
+      )}
+      {!loading && robots.length > 0 ? (
+        <div className="tc">
+          <h1 className="f1">Robo Friends</h1>
+          <SearchBox searchChange={onSearchChange} />
+          {/* If anything happens in CardLiSt, ErrorBoundry will catch it and show error */}
+          <ErrorBoundry>
+            <Scroll>
+              <CardList robots={filteredRobots} />
+            </Scroll>
+          </ErrorBoundry>
+        </div>
+      ) : null}
+    </>
   );
 }
-
-export default connect(mapStateToProps)(App);
+// export default connect(mapStateToProps)(App);
+export default App;
